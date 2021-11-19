@@ -9,7 +9,10 @@ const app = express();
 app.use(express.urlencoded({ extended: true }));
 // Parse incoming JSON data
 app.use(express.json());
+// Middleware to make assets public/static resources
+app.use(express.static('public'));
 
+// Filter through animals array using queries
 function filterByQuery(query, animalsArray) {
     let personalityTraitsArray = [];
     let filteredResults = animalsArray;
@@ -81,6 +84,7 @@ function validateAnimal(animal) {
     return true;
 }
 
+// Route for getting animals, including queries
 app.get('/api/animals', (req, res) => {
     let results = animals;
     if (req.query) {
@@ -89,6 +93,7 @@ app.get('/api/animals', (req, res) => {
     res.json(results);
 });
 
+// Route for getting animals by ID
 app.get('/api/animals/:id', (req, res) => {
     const result = findById(req.params.id, animals);
     if (result) {
@@ -98,6 +103,27 @@ app.get('/api/animals/:id', (req, res) => {
     }
 });
 
+// Root route
+app.get('/', (req, res) => {
+    res.sendFile(path.join(__dirname, './public/index.html'));
+});
+
+// Animals page route
+app.get('/animals', (req, res) => {
+    res.sendFile(path.join(__dirname, './public/animals.html'));
+});
+
+// Zookeepers page route
+app.get('/zookeepers', (req, res) => {
+    res.sendFile(path.join(__dirname, './public/zookeepers.html'));
+});
+
+// Wildcard route
+app.get('*', (req, res) => {
+    res.sendFile(path.join(__dirname, './public/index.html'));
+});
+
+// Route for accepting new animals
 app.post('/api/animals', (req, res) => {
     // req.body is where the incoming content is
     // Set ID based on what next index of the array will bear
