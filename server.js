@@ -16,6 +16,7 @@ app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
 // Middleware to make assets public/static resources
 app.use(express.static('public'));
+
 app.use('/api', apiRoutes);
 app.use('/', htmlRoutes);
 
